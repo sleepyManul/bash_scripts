@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 WARNING_LIMIT=90
 
 check_disk_func() {
@@ -12,5 +10,8 @@ check_disk_func() {
 	fi
 }
 
-check_disk_func "/"
-check_disk_func "/home"
+while true; do
+	check_disk_func "/"
+	check_disk_func "/home"
+	sleep 10
+done
