@@ -2,6 +2,8 @@
 
 source ~/.config/telegram_bot.conf
 WARNING_LIMIT=5
+LAST_ALERT_TIME=0
+ALERT_CD=300
 
 tg_alert_func() {
 	local disk="$1"
@@ -16,7 +18,11 @@ check_disk_func() {
 	local disk="$1"
 	local use=$(df -h "$disk" | awk 'NR==2 {print $5}' | tr -d '%')
 	if [ "$use" -ge "$WARNING_LIMIT" ]; then
-		tg_alert_func "$disk" "$use"
+		ALERT_TIME=$(date +%s)
+		if (( ALERT_TIME - LAST_ALERT_TIME >= ALERT_CD )); then
+			tg_alert_func "$disk" "$use"
+			LAST_ALERT_TIME="$ALERT_TIME"
+		fi
 	fi
 }
 
